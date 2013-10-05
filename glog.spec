@@ -9,6 +9,7 @@ Source0:	http://google-glog.googlecode.com/files/%{name}-%{version}.tar.gz
 URL:		http://code.google.com/p/google-glog
 BuildRequires:	autoconf
 BuildRequires:	libstdc++-devel
+BuildRequires:	pkgconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
