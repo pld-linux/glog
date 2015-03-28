@@ -5,29 +5,28 @@
 Summary:	A C++ application logging library
 Summary(pl.UTF-8):	Biblioteka do logowania dla aplikacji w C++
 Name:		glog
-Version:	0.3.3
-Release:	3
+Version:	0.3.4
+Release:	1
 License:	BSD
 Group:		Libraries
-#Source0Download: http://code.google.com/p/google-glog/downloads/list
-Source0:	http://google-glog.googlecode.com/files/%{name}-%{version}.tar.gz
-# Source0-md5:	a6fd2c22f8996846e34c763422717c18
+Source0:	https://github.com/google/glog/archive/v%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	df92e05c9d02504fb96674bc776a41cb
 Patch0:		%{name}-gflags.patch
 Patch1:		avoid-inline-asm.patch
-URL:		http://code.google.com/p/google-glog
+URL:		https://github.com/google/glog
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
 BuildRequires:	gflags-devel
+BuildRequires:	libstdc++-devel
+BuildRequires:	libtool >= 2:1.5
+BuildRequires:	pkgconfig
 %if %{with tests}
 BuildRequires:	gmock-devel
 BuildRequires:	gtest-devel
 %endif
-BuildRequires:	libstdc++-devel
-BuildRequires:	libtool >= 2:1.5
 %ifarch %{ix86} %{x8664} arm hppa ia64 mips ppc ppc64 sh
 BuildRequires:	libunwind-devel
 %endif
-BuildRequires:	pkgconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
