@@ -9,6 +9,7 @@ Version:	0.3.4
 Release:	3
 License:	BSD
 Group:		Libraries
+#Source0Download: https://github.com/google/glog/releases
 Source0:	https://github.com/google/glog/archive/v%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	df92e05c9d02504fb96674bc776a41cb
 Patch0:		%{name}-gflags.patch
