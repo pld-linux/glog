@@ -5,13 +5,13 @@
 Summary:	A C++ application logging library
 Summary(pl.UTF-8):	Biblioteka do logowania dla aplikacji w C++
 Name:		glog
-Version:	0.3.4
-Release:	5
+Version:	0.3.5
+Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/google/glog/releases
 Source0:	https://github.com/google/glog/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	df92e05c9d02504fb96674bc776a41cb
+# Source0-md5:	5df6d78b81e51b90ac0ecd7ed932b0d4
 Patch0:		%{name}-gflags.patch
 Patch1:		avoid-inline-asm.patch
 Patch2:		gcc5.patch
