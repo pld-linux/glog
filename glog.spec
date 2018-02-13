@@ -1,12 +1,12 @@
 #
 # Conditional build:
-%bcond_without	tests	# gtest/gmock based tests
+%bcond_with	tests	# gtest/gmock based tests
 
 Summary:	A C++ application logging library
 Summary(pl.UTF-8):	Biblioteka do logowania dla aplikacji w C++
 Name:		glog
 Version:	0.3.5
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/google/glog/releases
