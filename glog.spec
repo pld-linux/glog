@@ -25,6 +25,9 @@ BuildRequires:	pkgconfig
 %if %{with tests}
 BuildRequires:	gmock-devel
 BuildRequires:	gtest-devel
+%else
+BuildConflicts:	gmock-devel
+BuildConflicts:	gtest-devel
 %endif
 %ifarch %{ix86} %{x8664} arm hppa ia64 mips ppc ppc64 sh
 BuildRequires:	libunwind-devel
