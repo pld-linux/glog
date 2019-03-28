@@ -5,16 +5,15 @@
 Summary:	A C++ application logging library
 Summary(pl.UTF-8):	Biblioteka do logowania dla aplikacji w C++
 Name:		glog
-Version:	0.3.5
-Release:	3
+Version:	0.4.0
+Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/google/glog/releases
 Source0:	https://github.com/google/glog/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	5df6d78b81e51b90ac0ecd7ed932b0d4
+# Source0-md5:	0daea8785e6df922d7887755c3d100d0
 Patch0:		%{name}-gflags.patch
 Patch1:		avoid-inline-asm.patch
-Patch2:		gcc5.patch
 URL:		https://github.com/google/glog
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
@@ -29,7 +28,7 @@ BuildRequires:	gtest-devel
 BuildConflicts:	gmock-devel
 BuildConflicts:	gtest-devel
 %endif
-%ifarch %{ix86} %{x8664} arm hppa ia64 mips ppc ppc64 sh
+%ifarch %{ix86} %{x8664} x32 %{arm} hppa ia64 mips ppc ppc64 sh
 BuildRequires:	libunwind-devel
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -76,7 +75,6 @@ Statyczna biblioteka glog.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 %if %{with tests}
@@ -117,7 +115,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING ChangeLog README
+%doc AUTHORS COPYING ChangeLog README.md
 %attr(755,root,root) %{_libdir}/libglog.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libglog.so.0
 
