@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	tests	# gtest/gmock based tests
+%bcond_with	tests	# gtest/gmock based tests [signalhandler_unittest broken on x32 as of 0.4.0]
 
 Summary:	A C++ application logging library
 Summary(pl.UTF-8):	Biblioteka do logowania dla aplikacji w C++
