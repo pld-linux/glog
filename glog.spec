@@ -22,7 +22,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	pkgconfig
 %if %{with tests}
-BuildRequires:	gmock-devel
+BuildRequires:	gmock-devel >= 1.10.0
 BuildRequires:	gtest-devel
 %else
 BuildConflicts:	gmock-devel
@@ -77,15 +77,6 @@ Statyczna biblioteka glog.
 %patch1 -p1
 
 %build
-%if %{with tests}
-install -d gmock
-cd gmock
-%cmake $(pkg-config --variable=srcdir gmock) \
-	-DBUILD_SHARED_LIBS=OFF
-%{__make}
-cd ..
-LDFLAGS="%{rpmldflags} -L$(pwd)/gmock"
-%endif
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
