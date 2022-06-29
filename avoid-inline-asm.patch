@@ -2,9 +2,9 @@ http://code.google.com/p/google-glog/issues/detail?id=130
 
 make the code work with all gcc targets
 
---- glog-0.4.0/src/symbolize_unittest.cc.orig	2019-03-22 03:51:46.000000000 +0100
-+++ glog-0.4.0/src/symbolize_unittest.cc	2019-03-28 20:39:09.755256776 +0100
-@@ -77,9 +77,7 @@
+--- glog-0.6.0/src/symbolize_unittest.cc.orig	2019-03-22 03:51:46.000000000 +0100
++++ glog-0.6.0/src/symbolize_unittest.cc	2019-03-28 20:39:09.755256776 +0100
+@@ -78,9 +78,7 @@ static const char *TrySymbolize(void *pc
  #    endif  // __i386__
  #  else
  #  endif  // __GNUC__ >= 4
@@ -15,7 +15,7 @@ make the code work with all gcc targets
  #endif
  
  // Make them C linkage to avoid mangled names.
-@@ -312,8 +310,9 @@
+@@ -320,8 +318,9 @@ TEST(Symbolize, SymbolizeWithDemanglingS
  extern "C" {
  inline void* always_inline inline_func() {
    void *pc = NULL;
@@ -27,7 +27,7 @@ make the code work with all gcc targets
  #endif
    return pc;
  }
-@@ -321,14 +320,15 @@
+@@ -329,14 +328,15 @@ inline void* always_inline inline_func()
  void* ATTRIBUTE_NOINLINE non_inline_func();
  void* ATTRIBUTE_NOINLINE non_inline_func() {
    void *pc = NULL;
@@ -45,8 +45,8 @@ make the code work with all gcc targets
 +#if defined(TEST_WITH_LABEL_ADDRESSES) && defined(HAVE_ATTRIBUTE_NOINLINE)
    void *pc = non_inline_func();
    const char *symbol = TrySymbolize(pc);
-   CHECK(symbol != NULL);
-@@ -338,7 +338,7 @@
+ 
+@@ -349,7 +349,7 @@ static void ATTRIBUTE_NOINLINE TestWithP
  }
  
  static void ATTRIBUTE_NOINLINE TestWithPCInsideInlineFunction() {
@@ -54,4 +54,4 @@ make the code work with all gcc targets
 +#if defined(TEST_WITH_LABEL_ADDRESSES) && defined(HAVE_ALWAYS_INLINE)
    void *pc = inline_func();  // Must be inlined.
    const char *symbol = TrySymbolize(pc);
-   CHECK(symbol != NULL);
+ 

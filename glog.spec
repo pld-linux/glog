@@ -1,35 +1,34 @@
 #
 # Conditional build:
-%bcond_with	tests	# gtest/gmock based tests [signalhandler_unittest broken on x32 as of 0.4.0]
+%bcond_without	libunwind	# libunwind support
+%bcond_without	static_libs	# static library
+%bcond_without	tests		# gtest/gmock based tests [recheck: signalhandler_unittest broken on x32 as of 0.4.0]
 
+%ifarch %{ix86} %{x8664} x32 %{arm} hppa ia64 mips ppc ppc64 sh
+%undefine	with_libunwind
+%endif
 Summary:	A C++ application logging library
 Summary(pl.UTF-8):	Biblioteka do logowania dla aplikacji w C++
 Name:		glog
-Version:	0.4.0
+Version:	0.6.0
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/google/glog/releases
 Source0:	https://github.com/google/glog/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	0daea8785e6df922d7887755c3d100d0
-Patch0:		%{name}-gflags.patch
-Patch1:		avoid-inline-asm.patch
+# Source0-md5:	c98a6068bc9b8ad9cebaca625ca73aa2
+Patch0:		avoid-inline-asm.patch
 URL:		https://github.com/google/glog
-BuildRequires:	autoconf >= 2.57
-BuildRequires:	automake
-BuildRequires:	gflags-devel
+BuildRequires:	cmake >= 3.16
+BuildRequires:	gflags-devel >= 2.2.2
 BuildRequires:	libstdc++-devel
-BuildRequires:	libtool >= 2:1.5
+%if %{with libunwind}
+BuildRequires:	libunwind-devel
+%endif
 BuildRequires:	pkgconfig
 %if %{with tests}
 BuildRequires:	gmock-devel >= 1.10.0
 BuildRequires:	gtest-devel
-%else
-BuildConflicts:	gmock-devel
-BuildConflicts:	gtest-devel
-%endif
-%ifarch %{ix86} %{x8664} x32 %{arm} hppa ia64 mips ppc ppc64 sh
-BuildRequires:	libunwind-devel
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -48,7 +47,7 @@ Summary:	Development files for glog library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki glog
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gflags-devel
+Requires:	gflags-devel >= 2.2.2
 Requires:	libstdc++-devel
 
 %description devel
@@ -74,29 +73,37 @@ Statyczna biblioteka glog.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%configure
+%if %{with static_libs}
+%cmake -B build-static \
+	-DBUILD_SHARED_LIBS=OFF \
+	%{!?with_tests:-DWITH_GTEST=OFF} \
+	%{!?with_libunwind:-DWITH_UNWIND=OFF}
 
-%{__make}
+%{__make} -C build-static
+%endif
+
+%cmake -B build \
+	%{!?with_tests:-DWITH_GTEST=OFF} \
+	%{!?with_libunwind:-DWITH_UNWIND=OFF}
+
+%{__make} -C build
 
 %if %{with tests}
-%{__make} check
+%{__make} -C build test
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libglog.la
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+%if %{with static_libs}
+%{__make} -C build-static install \
+	DESTDIR=$RPM_BUILD_ROOT
+%endif
+
+%{__make} -C build install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -106,17 +113,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING ChangeLog README.md
+%doc AUTHORS COPYING ChangeLog README.rst
 %attr(755,root,root) %{_libdir}/libglog.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libglog.so.0
+%attr(755,root,root) %ghost %{_libdir}/libglog.so.1
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/designstyle.css doc/glog.html
 %attr(755,root,root) %{_libdir}/libglog.so
 %{_includedir}/glog
 %{_pkgconfigdir}/libglog.pc
+%{_libdir}/cmake/glog
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libglog.a
+%endif
