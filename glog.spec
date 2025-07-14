@@ -72,7 +72,7 @@ Statyczna biblioteka glog.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 %if %{with static_libs}
